@@ -21,16 +21,16 @@ public abstract class BaseJsonConverter implements IConverter {
     }
 
     @Override
-    public final <T extends BaseJsonConverter> String convert(final String content, final T reader) {
+    public final <T extends IConverter> String convert(final String content, final T converter) {
         final String baseContent = read(content);
         final String json = convertToJson(baseContent);
-        return reader.convert(json);
+        return converter.convert(json);
     }
 
     @Override
-    public final <T extends BaseJsonConverter> String convert(final File file, final T reader) {
+    public final <T extends IConverter> String convert(final File file, final T converter) {
         final String baseContent = read(file);
-        return convert(baseContent, reader);
+        return convert(baseContent, converter);
     }
 
     abstract String convertToJson(String content);

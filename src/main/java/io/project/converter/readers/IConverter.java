@@ -17,19 +17,19 @@ public interface IConverter {
 
     /**
      * @param content
-     * @param reader
+     * @param converter
      * @param <T>
      * @return
      */
-    <T extends BaseJsonConverter> String convert(String content, T reader);
+    <T extends IConverter> String convert(String content, T converter);
 
     /**
      * @param file
-     * @param reader
+     * @param converter
      * @param <T>
      * @return
      */
-    <T extends BaseJsonConverter> String convert(File file, T reader);
+    <T extends IConverter> String convert(File file, T converter);
 
     /**
      * @param content

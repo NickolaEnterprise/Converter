@@ -11,7 +11,7 @@ class ConverterApplicationTests {
     void contextLoads() {
         final JsonConverter jr = new JsonConverter();
         System.out.println(jr.convert("{\"Her\": \"test\"}", new PropertiesConverter()));
-        final BaseJsonConverter xmlReader = new BaseJsonConverter();
+        final XmlConverter xmlReader = new XmlConverter();
         System.out.println(xmlReader.convert("<note>\n" +
                 "<to>Tove</to>\n" +
                 "<from>Jani</from>\n" +
@@ -43,7 +43,7 @@ class ConverterApplicationTests {
         final PropertiesConverter propertiesReader = new PropertiesConverter();
         final String her = propertiesReader.convert("title=Home Page\n" +
                 "site.host=localhost\n" +
-                "site.port=8080", new BaseJsonConverter());
+                "site.port=8080", new XmlConverter());
         System.out.println(her);
 
         final CsvConverter csvReader = new CsvConverter();
