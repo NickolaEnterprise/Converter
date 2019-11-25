@@ -6,37 +6,19 @@ import org.springframework.stereotype.Service;
 
 import java.util.Objects;
 
-
-@Service
-public final class PropertiesReader extends BaseJsonReader {
+public final class PropertiesConverter extends BaseJsonConverter {
     private static final JavaPropsMapper mapper = new JavaPropsMapper();
 
-    /**
-     * read from content and validate
-     *
-     * @param content
-     * @return
-     */
     @Override
     public final String read(final String content) {
         if (Objects.isNull(content)) {
-            throw new ConverterException("YML not valid");
+            throw new ConverterException("PROPERTIES not valid");
         }
         return content;
     }
 
-    /**
-     * defined type
-     *
-     * @return
-     */
     @Override
-    public final Formats getType() {
-        return Formats.PROPERTIES;
-    }
-
-    @Override
-    public String convert(final String content) {
+    public final String convert(final String content) {
         try {
             final Object data = jsonWriter.readValue(content, Object.class);
             return mapper.writeValueAsString(data);
