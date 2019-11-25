@@ -1,9 +1,6 @@
 package io.project.converter.readers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.javaprop.JavaPropsMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.project.converter.exception.ConverterException;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +8,8 @@ import java.util.Objects;
 
 
 @Service
-public final class PropertiesReader extends BaseReader {
+public final class PropertiesReader extends BaseJsonReader {
+    private static final JavaPropsMapper mapper = new JavaPropsMapper();
 
     /**
      * read from content and validate
@@ -38,12 +36,20 @@ public final class PropertiesReader extends BaseReader {
     }
 
     @Override
-    final String convertToBaseFormat(final String content) {
+    public String convert(final String content) {
         try {
-            final JavaPropsMapper mapper = new JavaPropsMapper();
-            final ObjectMapper jsonMapper = new ObjectMapper();
+            final Object data = jsonWriter.readValue(content, Object.class);
+            return mapper.writeValueAsString(data);
+        } catch (final Exception e) {
+            throw new ConverterException("Can't convert PROPERTIES to JSON");
+        }
+    }
+
+    @Override
+    final String convertToJson(final String content) {
+        try {
             final Object data = mapper.readValue(content, Object.class);
-            return jsonMapper.writeValueAsString(data);
+            return jsonWriter.writeValueAsString(data);
         } catch (final Exception e) {
             throw new ConverterException("Can't convert PROPERTIES to JSON");
         }

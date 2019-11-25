@@ -10,7 +10,8 @@ import java.util.Objects;
 
 
 @Service
-public final class YmlReader extends BaseReader {
+public final class YmlReader extends BaseJsonReader {
+    private static final ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
 
     /**
      * read from content and validate
@@ -37,10 +38,18 @@ public final class YmlReader extends BaseReader {
     }
 
     @Override
-    final String convertToBaseFormat(final String content) {
+    public String convert(final String content) {
         try {
-            final ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
-            final ObjectMapper jsonWriter = new ObjectMapper();
+            final Object obj = jsonWriter.readValue(content, Object.class);
+            return yamlReader.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new ConverterException("Can't convert YML to JSON");
+        }
+    }
+
+    @Override
+    final String convertToJson(final String content) {
+        try {
             final Object obj = yamlReader.readValue(content, Object.class);
             return jsonWriter.writeValueAsString(obj);
         } catch (JsonProcessingException e) {

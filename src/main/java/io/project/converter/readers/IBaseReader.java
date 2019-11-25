@@ -8,9 +8,11 @@ public interface IBaseReader {
 
     String read(String content);
 
-    String readAsBase(String content);
+    <T extends BaseJsonReader> String toJson(String content, T reader);
 
-    String readAsBase(File file);
+    <T extends BaseJsonReader> String toJson(File file, T reader);
 
     Formats getType();
+
+    String convert(String content);
 }

@@ -10,7 +10,8 @@ import java.util.Objects;
 
 
 @Service
-public final class XmlReader extends BaseReader {
+public final class XmlReader extends BaseJsonReader {
+    private static final XmlMapper mapper = new XmlMapper();
 
     /**
      * read from content and validate
@@ -37,10 +38,19 @@ public final class XmlReader extends BaseReader {
     }
 
     @Override
-    final String convertToBaseFormat(final String content) {
+    public String convert(final String content) {
         try {
-            XmlMapper mapper = new XmlMapper();
-            final ObjectMapper jsonWriter = new ObjectMapper();
+            final Object obj = jsonWriter.readValue(content, Object.class);
+            return mapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new ConverterException("Can't convert XML to JSON");
+        }
+
+    }
+
+    @Override
+    final String convertToJson(final String content) {
+        try {
             final Object obj = mapper.readValue(content, Object.class);
             return jsonWriter.writeValueAsString(obj);
         } catch (JsonProcessingException e) {

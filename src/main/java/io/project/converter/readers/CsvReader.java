@@ -1,9 +1,7 @@
 package io.project.converter.readers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.project.converter.exception.ConverterException;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +9,9 @@ import java.util.Objects;
 
 
 @Service
-public final class CsvReader extends BaseReader {
+public final class CsvReader extends BaseJsonReader {
+    private static final CsvMapper csvMapper = new CsvMapper();
+
 
     /**
      * read from content and validate
@@ -38,12 +38,20 @@ public final class CsvReader extends BaseReader {
     }
 
     @Override
-    final String convertToBaseFormat(final String content) {
+    public String convert(final String content) {
         try {
-            final CsvMapper csvMapper = new CsvMapper();
-            final ObjectMapper objectMapper = new ObjectMapper();
+            final Object obj = jsonWriter.readValue(content, Object.class);
+            return csvMapper.writeValueAsString(obj);
+        } catch (JsonProcessingException e) {
+            throw new ConverterException("Can't convert YML to JSON");
+        }
+    }
+
+    @Override
+    final String convertToJson(final String content) {
+        try {
             final Object obj = csvMapper.readValue(content, Object.class);
-            return objectMapper.writeValueAsString(obj);
+            return jsonWriter.writeValueAsString(obj);
         } catch (JsonProcessingException e) {
             throw new ConverterException("Can't convert YML to JSON");
         }

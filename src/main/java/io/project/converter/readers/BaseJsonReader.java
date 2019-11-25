@@ -1,10 +1,12 @@
 package io.project.converter.readers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.project.converter.exception.ConverterException;
 
 import java.io.*;
 
-public abstract class BaseReader implements IBaseReader {
+public abstract class BaseJsonReader implements IBaseReader {
+    static final ObjectMapper jsonWriter = new ObjectMapper();
 
     /**
      * read from file and validate
@@ -23,16 +25,18 @@ public abstract class BaseReader implements IBaseReader {
     }
 
     @Override
-    public final String readAsBase(final String content) {
+    public final <T extends BaseJsonReader> String toJson(final String content, final T reader) {
         final String baseContent = read(content);
-        return convertToBaseFormat(baseContent);
+        final String json = convertToJson(baseContent);
+        return reader.convert(json);
     }
 
     @Override
-    public final String readAsBase(final File file) {
+    public final <T extends BaseJsonReader> String toJson(final File file, final T reader) {
         final String baseContent = read(file);
-        return convertToBaseFormat(baseContent);
+        return toJson(baseContent, reader);
     }
 
-    abstract String convertToBaseFormat(String content);
+    abstract String convertToJson(String content);
+
 }
