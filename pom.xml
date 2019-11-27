@@ -10,5 +10,6 @@
     <description>Universal converter between formats</description>
     <modules>
         <module>converter-core</module>
+        <module>converter-shell</module>
     </modules>
 </project>
