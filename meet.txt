@@ -1,0 +1,7 @@
+1. Write description to Project.
+2. Write Ui.
+3. Write Web service (REST).
+4. Batching processing and streaming processing.
+5. Create universal mapping, between all formats. (datapipe)
+6. Integrations with other systems.
+7. Add Transformation

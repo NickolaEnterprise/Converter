@@ -6,9 +6,8 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import java.io.File;
+import java.nio.file.Paths;
 import java.util.Map;
-
 
 @ShellComponent
 public class ConverterCommands {
@@ -27,6 +26,6 @@ public class ConverterCommands {
     ) {
         final IConverter fromConverter = converters.get(from);
         final IConverter toConverter = converters.get(to);
-        return fromConverter.convert(new File(pathToFile), toConverter);
+        return fromConverter.convert(Paths.get(pathToFile), toConverter);
     }
 }

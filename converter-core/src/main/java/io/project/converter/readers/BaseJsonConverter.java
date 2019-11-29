@@ -5,17 +5,20 @@ import io.project.converter.exception.ConverterException;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
-@Service
 public abstract class BaseJsonConverter implements IConverter {
     static final ObjectMapper jsonWriter = new ObjectMapper();
 
     @Override
-    public final String read(final File file) {
-        try (final InputStream inputStream = new FileInputStream(file);
-             final BufferedReader bf = new BufferedReader(new InputStreamReader(inputStream))) {
-            return read(bf.readLine());
-        } catch (final IOException e) {
+    public final String read(final Path path) {
+        try {
+            final byte[] content = Files.readAllBytes(path);
+            return new String(content, Charset.defaultCharset());
+        } catch (IOException e) {
             throw new ConverterException(e);
         }
     }
@@ -28,8 +31,8 @@ public abstract class BaseJsonConverter implements IConverter {
     }
 
     @Override
-    public final <T extends IConverter> String convert(final File file, final T converter) {
-        final String baseContent = read(file);
+    public final <T extends IConverter> String convert(final Path path, final T converter) {
+        final String baseContent = read(path);
         return convert(baseContent, converter);
     }
 
